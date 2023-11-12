@@ -12,6 +12,7 @@ import german100 from '../../assets/noun_frequency_lists/german_100.json';
 import spanish100 from '../../assets/noun_frequency_lists/spanish_100.json';
 import korean100 from '../../assets/noun_frequency_lists/korean_100.json';
 import japanese100 from '../../assets/noun_frequency_lists/japanese_100.json';
+import { json } from 'body-parser';
 
 
 localStorage.clear()
@@ -112,11 +113,29 @@ const Popup = () => {
   const [extensionActive, setExtensionActive] = useState(true);
   const [selectedLang, setSelectedLang] = useState("german");
   const [settings, setSettings] = useState(false);
-
+  const languageMap = new Map([
+    ['german', 'de'],
+    ['japanese', 'jp'],
+    ['english', 'en'],
+    ['spanish', 'es'],
+    ['french', 'fr'],
+    ['korean', 'kr'],
+  ]);
 
   useEffect(() => {
     localStorage.setItem(`active_deck`, `deck_${selectedLang}`);
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        action: 'storeData',
+        data: JSON.parse(localStorage.getItem(`deck_${selectedLang}`)),
+        language: languageMap.get(selectedLang),
+        activate: false
+      });
+    });
   }, [selectedLang]); // The dependency array ensures this effect runs when selectedDeckLang changes
+
+
+
 
   const toggleSettings = () => setSettings(!settings);
 
