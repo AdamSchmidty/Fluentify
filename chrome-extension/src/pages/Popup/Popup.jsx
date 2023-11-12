@@ -131,7 +131,7 @@ const Popup = () => {
 
       <p style={{ marginRight: '10px' }}>Words known: {retrieveWordsKnown()}</p>
       <p>Target Language</p>
-      <DropdownMenu options={languages} setSelected={setSelectedLang} />
+      <DropdownMenu options={languages} setSelectOption={setSelectedLang} />
       <FormGroup>
         <FormControlLabel control={<Switch defaultChecked onChange={() => { setExtensionActive(!extensionActive); handleStartStopChange(extensionActive); }} />} label="Stop/Start" />
       </FormGroup>
