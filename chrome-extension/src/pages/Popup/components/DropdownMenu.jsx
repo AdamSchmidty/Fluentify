@@ -5,7 +5,6 @@ import Select from 'react-select'
 
 
 const DropdownMenu = ({ options, setSelectOption }) => {
-    //Pass this to props
 
     const handleSelectChange = (selectedOption) => {
         setSelectOption(selectedOption.value.toLowerCase());

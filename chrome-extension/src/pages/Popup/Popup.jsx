@@ -61,6 +61,7 @@ const SettingsPage = () => {
 
 
   useEffect(() => {
+    console.log(`Selected Deck Lang Updated: `);
     const updatedWordList = JSON.parse(localStorage.getItem(`deck_${selectedDeckLang}`));
     setWordList(updatedWordList);
   }, [selectedDeckLang]); // The dependency array ensures this effect runs when selectedDeckLang changes
@@ -71,7 +72,8 @@ const SettingsPage = () => {
       <h5>Learning Data</h5>
       <DropdownMenu options={languages} setSelectOption={setSelectedLang} />
       <h4>Deck</h4>
-      <WordTable wordlist={wordList} deckLang={selectedDeckLang} />
+      <h5>Selected Lang {selectedDeckLang}</h5>
+      <WordTable wordlist={wordList} selectedDeckLang={selectedDeckLang} />
       <FormGroup>
         <FormControlLabel control={<Switch defaultChecked />} label="Highlight Definitions" />
       </FormGroup>
