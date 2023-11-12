@@ -4,12 +4,11 @@ import Select from 'react-select'
 //https://react-select.com/home
 
 
-const DropdownMenu = ({ options }) => {
-    const [selected, setSelectOption] = useState("");
+const DropdownMenu = ({ options, setSelectOption }) => {
     //Pass this to props
 
     const handleSelectChange = (selectedOption) => {
-        setSelectOption(selectedOption.value);
+        setSelectOption(selectedOption.value.toLowerCase());
     };
     return (
         <div>

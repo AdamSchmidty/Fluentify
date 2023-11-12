@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import './Popup.css';
@@ -14,10 +14,11 @@ import korean100 from '../../assets/noun_frequency_lists/korean_100.json';
 import japanese100 from '../../assets/noun_frequency_lists/japanese_100.json';
 
 
+localStorage.clear()
 if (localStorage.getItem('firstRun') === null) {
   localStorage.setItem("active_deck", "deck_spanish");
-  localStorage.setItem("active", "yes");
-  localStorage.setItem("definitions", "on");
+  localStorage.setItem("active", "true");
+  localStorage.setItem("definitions", "true");
   localStorage.setItem("deck_french", JSON.stringify(french100));
   localStorage.setItem("deck_german", JSON.stringify(german100));
   localStorage.setItem("deck_spanish", JSON.stringify(spanish100));
@@ -55,19 +56,23 @@ const retrieveLanguageDecks = (lang) => {
 
 const SettingsPage = () => {
 
-  const handleSelectedLangChange = (change) => {
+  const [selectedDeckLang, setSelectedLang] = useState("japanese");
+  const [wordList, setWordList] = useState(JSON.parse(localStorage.getItem(`deck_${selectedDeckLang}`)))
 
-  }
 
+  useEffect(() => {
+    console.log(selectedDeckLang);
+    const updatedWordList = JSON.parse(localStorage.getItem(`deck_${selectedDeckLang}`));
+    setWordList(updatedWordList);
+  }, [selectedDeckLang]); // The dependency array ensures this effect runs when selectedDeckLang changes
 
-  const [selectedDeckLang, setSelectedLang] = useState("English");
 
   return (
     <div>
       <h5>Learning Data</h5>
-      <DropdownMenu options={languages} setSelected={setSelectedLang} />
+      <DropdownMenu options={languages} setSelectOption={setSelectedLang} />
       <h4>Deck</h4>
-      <WordTable words={french100} />
+      <WordTable wordlist={wordList} />
       <FormGroup>
         <FormControlLabel control={<Switch defaultChecked />} label="Highlight Definitions" />
       </FormGroup>
@@ -97,23 +102,14 @@ const LogoDisplay = ({ setSettings }) => {
   )
 }
 
-const handleStartStopChange = () => {
-  const wc = localStorage.getItem(`extension_active`);
-  if (wc === null) {
-    const defaultItem = ([{
-      "value": "spanish",
-      "label": "spanish"
-    }]);
-    localStorage.setItem(`deck_${lang}`, JSON.stringify(defaultItem));
-
-    return (defaultItem);
-  }
-  return JSON.parse(wc);
+const handleStartStopChange = (extensionActive) => {
+  localStorage.setItem("active", extensionActive.toString());
 }
 
 const Popup = () => {
 
-  const [selectedLang, setSelectedLang] = useState("English");
+  const [extensionActive, setExtensionActive] = useState(true);
+  const [selectedLang, setSelectedLang] = useState(true);
   const [settings, setSettings] = useState(false);
 
   const toggleSettings = () => setSettings(!settings);
@@ -131,12 +127,12 @@ const Popup = () => {
     <div>
 
       <LogoDisplay setSettings={toggleSettings} />
+
       <p style={{ marginRight: '10px' }}>Words known: {retrieveWordsKnown()}</p>
       <p>Target Language</p>
-      {/* FIX THIS */}
       <DropdownMenu options={languages} setSelected={setSelectedLang} />
       <FormGroup>
-        <FormControlLabel control={<Switch defaultChecked onChange={handleStartStopChange} />} label="Stop/Start" />
+        <FormControlLabel control={<Switch defaultChecked onChange={() => { setExtensionActive(!extensionActive); handleStartStopChange(extensionActive); }} />} label="Stop/Start" />
       </FormGroup>
 
     </div>
