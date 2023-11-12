@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-const SexyFuckingForm = () => {
+const SexyFuckingForm = ({ wordlist, setWordList, selectedDeckLang }) => {
     const [values, setValues] = useState({
-        firstName: '',
-        lastName: '',
+        newWord: '',
     });
 
     const handleChange = (event) => {
@@ -14,17 +13,21 @@ const SexyFuckingForm = () => {
     };
 
     const handleSubmit = (event) => {
+        console.log('submitted')
         event.preventDefault();
-        console.log('Form submitted with values:', values);
+        const newWordList = [...wordlist, values.newWord]; // Use push to add the new word to the array
+        setWordList(newWordList);
+        console.log(`Storage: deck_${selectedDeckLang}`)
+        localStorage.setItem(`deck_${selectedDeckLang}`, JSON.stringify(newWordList));
     };
 
     return (
         <form style={formStyle} onSubmit={handleSubmit}>
             <input
                 type="text"
-                name="firstName"
+                name="newWord"
                 placeholder="Add Word"
-                value={values.firstName}
+                value={values.newWord}
                 onChange={handleChange}
                 style={inputStyle}
             />

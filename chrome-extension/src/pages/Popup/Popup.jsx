@@ -77,7 +77,7 @@ const SettingsPage = () => {
       <FormGroup>
         <FormControlLabel control={<Switch defaultChecked />} label="Highlight Definitions" />
       </FormGroup>
-      <SexyFuckingForm />
+      <SexyFuckingForm wordlist={wordList} setWordList={setWordList} selectedDeckLang={selectedDeckLang} />
 
     </div>
   )
@@ -110,10 +110,16 @@ const handleStartStopChange = (extensionActive) => {
 const Popup = () => {
 
   const [extensionActive, setExtensionActive] = useState(true);
-  const [selectedLang, setSelectedLang] = useState(true);
+  const [selectedLang, setSelectedLang] = useState("german");
   const [settings, setSettings] = useState(false);
 
+
+  useEffect(() => {
+    localStorage.setItem(`active_deck`, `deck_${selectedLang}`);
+  }, [selectedLang]); // The dependency array ensures this effect runs when selectedDeckLang changes
+
   const toggleSettings = () => setSettings(!settings);
+
 
   if (settings) {
     return (
